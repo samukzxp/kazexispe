@@ -3,13 +3,43 @@ const venom = require('venom-bot');
 const bodyParser = require('body-parser');
 const cors = require('cors'); // Importando o middleware CORS
 
+const puppeteer = require('puppeteer-core');
+
 const app = express();
 app.use(bodyParser.json());
 app.use(cors()); // Adicionando o middleware CORS para permitir requisições de diferentes origens
 
 let client;
 
-// Configuração do Venom sem Puppeteer
+async function initializePuppeteer() {
+  const puppeteerFetcher = puppeteer.createBrowserFetcher();
+  const revisionInfo = await puppeteerFetcher.download('884014'); // Revisão específica do navegador Chrome
+  const browser = await puppeteer.launch({
+    executablePath: revisionInfo.executablePath,
+    args: ['--no-sandbox', '--disabled-setupid-sandbox']
+  });
+  return browser;
+}
+
+async function test() {
+  try {
+    const browser = await initializePuppeteer();
+    const page = await browser.newPage();
+    await page.setViewport({
+      width: 1920,
+      height: 1280,
+      deviceScaleFactor: 1,
+    });
+
+    // Go to page
+    await page.goto('https://google.com/', {
+      waitUntil: 'networkidle0',
+    });
+  } catch (error) {
+    console.error('Erro ao inicializar o Puppeteer:', error);
+  }
+}
+
 venom
   .create(
     'sessionName',
@@ -17,8 +47,8 @@ venom
       console.log(asciiQR); // Opcional para registrar o QR na terminal
     },
     undefined,
-    { logQR: false, headless: 'new' } // Adicione `headless: 'new'` conforme a recomendação
-)
+    { logQR: false, headless: 'new' } // Adiciona `headless: 'new'`
+  )
   .then((clientInstance) => {
     client = clientInstance;
     console.log('Bot iniciado');
