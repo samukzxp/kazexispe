@@ -2,17 +2,11 @@ const express = require('express');
 const venom = require('venom-bot');
 const bodyParser = require('body-parser');
 const cors = require('cors'); // Importando o middleware CORS
+const puppeteer = require('puppeteer');
 
 const app = express();
 app.use(bodyParser.json());
-
-// Configuração do CORS, permitindo requisições de uma origem específica
-const corsOptions = {
-  origin: '*', // Substitua pela URL permitida
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  allowedHeaders: 'Content-Type, Authorization'
-};
-app.use(cors(corsOptions));
+app.use(cors()); // Adicionando o middleware CORS para permitir requisições de diferentes origens
 
 let client;
 
@@ -32,6 +26,14 @@ venom
   .catch((erro) => {
     console.error('Erro ao iniciar o Venom:', erro);
   });
+
+// Configuração do Puppeteer para encontrar o navegador
+const initializePuppeteer = async () => {
+  const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH || await puppeteer.executablePath();
+  puppeteer.executablePath = executablePath;
+};
+
+initializePuppeteer();
 
 app.post('/send-message', (req, res) => {
   const { number, message } = req.body;
