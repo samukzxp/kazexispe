@@ -10,14 +10,13 @@ app.use(cors()); // Adicionando o middleware CORS para permitir requisições de
 
 let client;
 
-
 venom.create(
   'sessionName',
   (base64Qr, asciiQR, attempts, urlCode) => {
     console.log(asciiQR); // Opcional para registrar o QR na terminal
   },
   undefined,
-  { logQR: false, headless: true } // Adicione `headless: true`
+  { logQR: false, headless: 'new' } // Use 'new' no lugar de true
 )
   .then((clientInstance) => {
     client = clientInstance;
