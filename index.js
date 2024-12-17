@@ -2,7 +2,6 @@ const express = require('express');
 const venom = require('venom-bot');
 const bodyParser = require('body-parser');
 const cors = require('cors'); // Importando o middleware CORS
-const puppeteer = require('puppeteer');
 
 const app = express();
 app.use(bodyParser.json());
@@ -10,13 +9,15 @@ app.use(cors()); // Adicionando o middleware CORS para permitir requisições de
 
 let client;
 
-venom.create(
-  'sessionName',
-  (base64Qr, asciiQR, attempts, urlCode) => {
-    console.log(asciiQR); // Opcional para registrar o QR na terminal
-  },
-  undefined,
-  { logQR: false, headless: 'new' } // Use 'new' no lugar de true
+// Configuração do Venom sem Puppeteer
+venom
+  .create(
+    'sessionName',
+    (base64Qr, asciiQR, attempts, urlCode) => {
+      console.log(asciiQR); // Opcional para registrar o QR na terminal
+    },
+    undefined,
+    { logQR: false, headless: true } // Adicione `headless: true`
 )
   .then((clientInstance) => {
     client = clientInstance;
@@ -25,14 +26,6 @@ venom.create(
   .catch((erro) => {
     console.error('Erro ao iniciar o Venom:', erro);
   });
-
-// Configuração do Puppeteer para encontrar o navegador
-const initializePuppeteer = async () => {
-  const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH || await puppeteer.executablePath();
-  puppeteer.executablePath = executablePath;
-};
-
-initializePuppeteer();
 
 app.post('/send-message', (req, res) => {
   const { number, message } = req.body;
