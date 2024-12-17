@@ -17,7 +17,7 @@ venom
       console.log(asciiQR); // Opcional para registrar o QR na terminal
     },
     undefined,
-    { logQR: false, headless: true } // Adicione `headless: true`
+    { logQR: false, headless: 'new' } // Adicione `headless: 'new'` conforme a recomendação
 )
   .then((clientInstance) => {
     client = clientInstance;
