@@ -7,7 +7,12 @@ const puppeteer = require('puppeteer-core');
 
 const app = express();
 app.use(bodyParser.json());
-app.use(cors()); // Adicionando o middleware CORS para permitir requisições de diferentes origens
+
+const corsOptions = {
+  origin: 'http://127.0.0.1:55676/', // Substitua pela URL permitida
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: 'Content-Type, Authorization'
+};
 
 let client;
 
