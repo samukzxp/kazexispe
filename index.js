@@ -10,15 +10,15 @@ app.use(cors()); // Adicionando o middleware CORS para permitir requisições de
 
 let client;
 
-venom
-  .create(
-    'sessionName',
-    (base64Qr, asciiQR, attempts, urlCode) => {
-      console.log(asciiQR); // Opcional para registrar o QR na terminal
-    },
-    undefined,
-    { logQR: false }
-  )
+
+venom.create(
+  'sessionName',
+  (base64Qr, asciiQR, attempts, urlCode) => {
+    console.log(asciiQR); // Opcional para registrar o QR na terminal
+  },
+  undefined,
+  { logQR: false, headless: true } // Adicione `headless: true`
+)
   .then((clientInstance) => {
     client = clientInstance;
     console.log('Bot iniciado');
