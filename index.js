@@ -9,12 +9,15 @@ const app = express();
 app.use(bodyParser.json());
 
 const corsOptions = {
-  origin: 'http://127.0.0.1:55676/', // Substitua pela URL permitida
+  origin: 'http://127.0.0.1:55676', // Substitua pela URL permitida
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   allowedHeaders: 'Content-Type, Authorization'
 };
 
+app.use(corsOptions);
+
 let client;
+
 
 async function initializePuppeteer() {
   const puppeteerFetcher = puppeteer.createBrowserFetcher();
